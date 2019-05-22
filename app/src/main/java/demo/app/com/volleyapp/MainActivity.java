@@ -1,8 +1,14 @@
 package demo.app.com.volleyapp;
 
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.BottomNavigationView;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,88 +27,52 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    //    EditText editTextUsername, editTextEmail, editTextPassword, editTextConfirmPw;
-//    Button buttonSave, buttonShow;
-//    String url = "http://172.20.10.3:8000/api/register";
-////    String url_show ="http://172.20.10.3:8000/api/user";
-//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//
-//        editTextUsername = findViewById(R.id.txt_username);
-//        editTextEmail = findViewById(R.id.txt_email);
-//        editTextPassword = findViewById(R.id.txt_password);
-//        editTextConfirmPw = findViewById(R.id.txt_confirm_pw);
-//
-//        buttonSave = findViewById(R.id.btn_save);
-//        buttonShow = findViewById(R.id.btn_show);
-//
-//
-//
-//        buttonSave.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String username = editTextUsername.getText().toString();
-//                String email = editTextEmail.getText().toString();
-//                String password = editTextPassword.getText().toString();
-//                String confirm_pw = editTextConfirmPw.getText().toString();
-//
-//                HashMap data = new HashMap();
-//                data.put("username", username);
-//                data.put("email", email);
-//                data.put("password", password);
-//                data.put("c_password", confirm_pw);
-//
-//                postData(url,data);
-//            }
-//        });
-//
-//        buttonShow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                getData(url_show);
-//            }
-//        });
-//    }
-//
-//
-//    private void postData(String url, HashMap data){
-//
-//        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-//        JsonObjectRequest request =  new JsonObjectRequest(Request.Method.POST,url, new JSONObject(data), new Response.Listener<JSONObject>() {
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                Log.e("Save_data", response.toString());
-//            }
-//        },
-//        new Response.ErrorListener(){
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.e("Error_Volley", error.toString());
-//            }
-//        });
-//
-//        requestQueue.add(request);
-//    }
-//
-//    private void getData(String url){
-//        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-//        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                Log.e("All_DATA::", response.toString());
-//            }
-//        },
-//
-//        new Response.ErrorListener(){
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.e("ERROR", error.toString());
-//            }
-//        });
-//    }
-//}
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
+
+        Fragment android = new Home_Fragment();
+        this.setDefaulFragment(android);
+    }
+
+    private void setDefaulFragment(Fragment fragment){
+        this.loadFragment(fragment);
+    }
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    Fragment selectedFragment = null;
+                    switch (item.getItemId()) {
+                        case R.id.nav_home:
+                            selectedFragment = new Home_Fragment();
+                            //getActionBar().setTitle("Hello world App");
+
+                            break;
+                        case R.id.nav_account:
+                            selectedFragment = new Account_Fregment();
+                            break;
+                        case R.id.nav_notification:
+                            selectedFragment = new Notification_Fragment();break;
+                        case R.id.nav_setting:
+                            selectedFragment = new Notification_Fragment();break;
+
+                    }
+
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            selectedFragment).commit();
+
+                    return true;
+                }
+            };
+    private void loadFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        //  transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
